@@ -1,6 +1,8 @@
 package examen.ejercicio3;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +13,38 @@ public class MainEj3 {
 
         //Declarmaos las varaibles
         int numero = 1;    //Variable que nos servirá para contar el numero de procesos
-        String [] comando1 = {"java", "src/examen/ejercicio3/NumerosAleatorios.java"};
+        String [] comando1 = {"Java", "src/examen/ejercicio3/NumerosAleatorios.java"};
         List<Process> listaProcesos = new ArrayList<>();
 
         //Creamos un ProcessBuilder para ejecutar el comando1
         ProcessBuilder pb1 = new ProcessBuilder(comando1);
 
         //Lanzo los 10 primeros que crean los archivos.
-        try {
+
+            pb1.redirectError(ProcessBuilder.Redirect.INHERIT);
+            String cadena;
             for (int i = 0; i < 10; i++) {
-                pb1.redirectOutput(new File("src/examen/ejercicio3/numero" + numero + ".txt"));
-                Process p = pb1.start();
+                cadena = "numero" + numero + ".txt";
+                pb1.redirectOutput(new File(cadena));
+                Process p = null;
+                try {
+                    p = pb1.start();
+                } catch (IOException e) {
+                    System.err.println("Error durante la ejecución del proceso");
+                    System.err.println(e.getLocalizedMessage());
+                    e.printStackTrace();
+                }
                 listaProcesos.add(p);
                 numero++;
             }
+
+             /*
+            pb1.redirectOutput(new File("C:\\ejercicio3\\prueba.txt"));
+
+            Process p = pb1.start();
+            listaProcesos.add(p);
+
+              */
             //Mientras que numero sea mayor que 0
             while (numero > 0) {
                 //Reseteo el contador a 10
@@ -61,29 +81,36 @@ public class MainEj3 {
                 ProcessBuilder pb2 = new ProcessBuilder(comando2);
                 ProcessBuilder pb3 = new ProcessBuilder(comando3);
 
+                String cadena2 = "numero" + numero + ".txt";
+
                 //Redirecciono la entrada del pb2 a la salida del pb1
-                pb2.redirectInput(new File("src/examen/ejercicio3/numero" + numero + ".txt"));
+                pb2.redirectInput(new File(cadena2));
 
                 //Redirecciono la salida del pb2 a un archivo sumas
                 pb2.redirectOutput(ProcessBuilder.Redirect.appendTo(new File("src/examen/ejercicio3/sumas.txt")));
 
                 //Redirecciono la entrada del pb3 a la salida del pb1
-                pb3.redirectInput(new File("src/examen/ejercicio3/numeros" + numero + ".txt"));
+                pb3.redirectInput(new File(cadena2));
 
                 //Redirecciono la salida del pb3 a un archivo medias
                 pb3.redirectOutput(ProcessBuilder.Redirect.appendTo(new File("src/examen/ejercicio3/medias.txt")));
 
                 //Inicio los procesos.
-                pb2.start();
-                pb3.start();
+                try {
+                    pb2.start();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    pb3.start();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
                 //Incremento el numero para el siguiente proceso.
                 numero++;
             }
-        } catch (IOException e) {
-            System.err.println("Error durante ejecución del proceso");
-            System.err.println(e.getLocalizedMessage());
-        }
+
 
     }
 }
