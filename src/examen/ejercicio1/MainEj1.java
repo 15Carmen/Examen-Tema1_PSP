@@ -7,22 +7,32 @@ public class MainEj1 {
 
     public static void main(String[] args) {
 
+        //Declaramos las variables
+        int opc;            //Variable que contendrá la opción seleccionada por el usuario
+        int numero1;        //Variable que contendrá el primer número introducido por el usuario
+        int numero2;        //Variable que contendrá el segundo número introducido por el usuario
+        String[] command;   //Array que contendrá el comando que ejecutará la calculadora
+        ProcessBuilder pb;  //Variable que contendrá el comando que ejecutará la calculadora
+
         //Declaramos un scanner para poder leer por consola
         Scanner sc = new Scanner(System.in);
 
         //Le pasamos por parametro el sc y pedimos los datos que necesita para ejecutarse la calculadora
-        String opc = menu(sc);
-        String numero1 = pedirNumero(sc);
-        String numero2 = pedirNumero(sc);
+        opc = menu(sc);
 
-        //Una vez pedido los datos, se le pasa por parametros en el comando a ejecutar, justo después de llamar a Java Calculadora.java se le ponen los parametros que van en el String[] args
-        ProcessBuilder pb = new ProcessBuilder("Java", "src/examen/ejercicio1/Calculadora.java", opc, numero1, numero2);
+        //Le pedimos al usuario los dos números
+        System.out.print("Primer número: ");
+        numero1 = sc.nextInt();
 
-        //Le decimos que coja la herencia por defecto
-        pb.inheritIO();
+        System.out.print("Segundo número: ");
+        numero2 = sc.nextInt();
+
+        //Creamos el comando que ejecutará la calculadora
+        command = new String[]{"java", "src/examen/ejercicio1/Calculadora.java", Integer.toString(opc), Integer.toString(numero1), Integer.toString(numero2)};
+        pb = new ProcessBuilder(command);
 
         try {
-            //Arrancamos el proceso
+            //Ejecutamos el comando
             Process p = pb.start();
 
             //Obtenemos el valor devuelto por el proceso
@@ -34,15 +44,13 @@ public class MainEj1 {
             } else {
                 System.out.println("El comando ha terminado con el siguiente código de error: " + retorno);
             }
-        } catch(IOException e) {
-            System.err.println("Error durante ejecución del proceso");
+        } catch (Exception e) {
+            System.out.println("Error al ejecutar el comando");
             System.out.println(e.getLocalizedMessage());
-
-        } catch(InterruptedException e) {
-            System.err.println("Proceso interrumpido");
-            System.out.println(e.getLocalizedMessage());
-
         }
+
+        //Le decimos que coja la herencia por defecto
+        pb.inheritIO();
 
         //Cerramos el scanner
         sc.close();
@@ -54,9 +62,9 @@ public class MainEj1 {
      * @param sc Scanner para poder leer por consola
      * @return Devuelve la opción seleccionada por el usuario
      */
-    public static String menu(Scanner sc) {
+    public static int menu(Scanner sc) {
         // En opc guardaremos la opción seleccionada por el usuario
-        String opc;
+        int opc;
         // Imprimimos el menú con las diversas opciones
         System.out.println("""
                 Elija qué calculo desea realizar:
@@ -66,25 +74,9 @@ public class MainEj1 {
                 4. Division
                 """);
         // Leemos la opción de teclado
-        opc = sc.next();
+        opc = sc.nextInt();
+        sc.nextLine();
         return opc;
-    }
-
-    /**
-     * Método que pedirá un número por consola
-     * @param sc Scanner para poder leer por consola
-     * @return Devuelve el número introducido por el usuario
-     */
-    private static String pedirNumero(Scanner sc) {
-        //Declaramos la variable
-        String numero;  //Variable que guardará el número introducido por el usuario
-
-        //Pedimos el número al usuario y lo guardamos en la variable
-        System.out.println("Introduce un numero");
-        numero = sc.next();
-
-        //Devolvemos el número
-        return numero;
     }
 
 
