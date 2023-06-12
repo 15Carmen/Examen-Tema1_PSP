@@ -1,13 +1,12 @@
-package examen.ejercicio3;
+package examen.ejercicio03;
 
 import java.util.Scanner;
 
-public class MediaNumeros {
+public class SumaNumeros {
     public static void main(String[] args) {
 
         //Declaramos las variables
         double suma = 0;
-        double contador = 0;
         double numero;
 
         //Declaro el Scanner para leer por teclado
@@ -19,11 +18,9 @@ public class MediaNumeros {
             numero = sc.nextDouble();
             //Sumo el numero a la variable suma
             suma += numero;
-            //Incremento el contador en uno
-            contador++;
         }
-        //Cuando salgo del bucle muestro la media (suma/contador) por pantalla
-        System.out.println("Esta media es del fichero: " + suma/contador);
+        //Cuando salgo del bucle muestro la suma por pantalla
+        System.out.println(suma);
 
         //Cerramos el Scanner
         sc.close();
